@@ -1,6 +1,6 @@
 # El Paso Rhinos — Sponsor Portal Demo
 
-A pitch-closing demo site built for the **2026-05-18 in-person meeting with Shea Herman** at 601 Woodland Ave.
+A pitch-closing demo site built for the **2026-05-18 in-person meeting with Shea Sherman** at 601 Woodland Ave.
 
 This is NOT a production sponsor portal — it's a one-page visual demo of what a custom-built portal would look and feel like. Goal: walk Shea through it on her phone Monday morning and close the engagement.
 
@@ -13,6 +13,7 @@ This is NOT a production sponsor portal — it's a one-page visual demo of what 
 - **Built:** 2026-05-15 · color refit to Rhinos orange/black 2026-05-15
 - **Stack:** Static HTML + Tailwind CDN + custom CSS, no build step
 - **Hosting:** Netlify (StitchHook team)
+- **Auto-deploy:** ON — pushes to `main` go live in ~5 seconds
 
 ## Brand Palette (Official Rhinos Colors)
 
@@ -34,24 +35,15 @@ This repo is wired so you can edit the site directly from the **Claude app on yo
 
 1. Open the Claude app → start a Dispatch task on `diegogallardodg-prog/rhinos-sponsor-portal`.
 2. Tell Claude what to change ("make the CTA buttons bigger", "swap the hero subhead to X", "add a testimonials section").
-3. Claude commits to `main`. Once you wire the GitHub → Netlify integration (one-time, below), every push redeploys automatically.
-4. Live site updates in ~30 seconds.
-
-### One-time: connect GitHub → Netlify auto-deploy
-
-Do this once from desktop so pushes auto-deploy:
-
-1. Go to https://app.netlify.com/projects/rhinos-sponsor-portal/configuration/deploys
-2. **Build & deploy → Link repository → GitHub → `diegogallardodg-prog/rhinos-sponsor-portal`**
-3. Production branch: `main`. Build command: *(leave empty)*. Publish dir: `.`
-4. Save. From now on `git push` = deploy.
-
-Until that's wired, deploys still work via the local `./deploy.sh` script (below).
+3. Claude commits to `main`. Netlify auto-deploys every push.
+4. Live site updates in ~5 seconds.
 
 ## Deploy It (manual, from desktop)
 
+Auto-deploy handles normal edits. For a manual one-shot from your Mac:
+
 ```bash
-cd ~/Documents/AgentDeploy_Clients/Shea_Herman/web && ./deploy.sh
+cd ~/Documents/AgentDeploy_Clients/Shea_Sherman/web && ./deploy.sh
 ```
 
 ## What's On the Page
@@ -67,6 +59,8 @@ cd ~/Documents/AgentDeploy_Clients/Shea_Herman/web && ./deploy.sh
 
 - 2026-05-15 — Initial build by AgentDeploy TX.
 - 2026-05-15 — Color refit: red → official Rhinos orange (`#F37021`) + ink black + grey. Pushed to GitHub for mobile editing via Claude Dispatch.
+- 2026-05-15 — Name correction: Herman → Sherman. Local folder also renamed to `Shea_Sherman/`.
+- 2026-05-15 — GitHub → Netlify auto-deploy wired. Pushes to `main` deploy in ~5s.
 
 ---
 Diego Gallardo · diego.gallardo.dg@gmail.com · El Paso, TX
