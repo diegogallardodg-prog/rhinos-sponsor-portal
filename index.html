@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Rhinos Sponsor Portal — Built for the El Paso Rhinos</title>
+  <meta name="description" content="A custom sponsor portal built around the El Paso Rhinos' partnership pipeline. AI-generated proposals, branded sponsor logins, automated activation reports. Built by AgentDeploy TX.">
+
+  <meta property="og:title" content="Rhinos Sponsor Portal — Built for the El Paso Rhinos">
+  <meta property="og:description" content="A custom sponsor portal for the El Paso Rhinos. AI-generated proposals, branded sponsor logins, automated activation reports.">
+  <meta property="og:image" content="https://rhinos-sponsor-portal.netlify.app/images/og.jpg">
+  <meta property="og:url" content="https://rhinos-sponsor-portal.netlify.app/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Anton', 'Impact', 'sans-serif'],
+            body: ['Inter', 'sans-serif']
+          },
+          colors: {
+            rhino: {
+              orange:    '#F37021',   /* primary Rhinos orange */
+              orangeDark:'#C2541A',   /* hover/dark */
+              ink:       '#0B0B0E',   /* team black */
+              ink2:      '#17171A',   /* card surface */
+              silver:    '#D4D4D8',   /* team grey light */
+              steel:     '#52525B',   /* team grey mid */
+              cream:     '#FAFAF9'    /* off-white */
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, .display { font-family: 'Anton', Impact, sans-serif; letter-spacing: 0.01em; }
+
+    .stripe-orange {
+      background-image: repeating-linear-gradient(135deg, transparent, transparent 14px, rgba(243,112,33,0.10) 14px, rgba(243,112,33,0.10) 15px);
+    }
+
+    .browser-chrome {
+      background: #1A1A1F;
+      border-radius: 14px 14px 0 0;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .browser-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mockup-shadow { box-shadow: 0 30px 60px -15px rgba(0,0,0,0.3), 0 18px 36px -18px rgba(243,112,33,0.18); }
+
+    .hero-accent { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .hero-accent::before {
+      content: ""; position: absolute; top: -20%; right: -10%; width: 60%; height: 140%;
+      background: linear-gradient(135deg, rgba(243,112,33,0.07) 0%, transparent 50%);
+      transform: skewX(-12deg);
+    }
+
+    .tab-btn[aria-selected="true"] { background: #F37021; color: white; }
+    .tab-btn[aria-selected="false"] { background: transparent; color: #52525B; }
+
+    .doc-preview { background: white; box-shadow: 0 20px 40px -20px rgba(0,0,0,0.25); border-radius: 8px; overflow: hidden; }
+    .doc-header-stripe { height: 6px; background: #F37021; }
+
+    /* === HERO ANIMATION === */
+    /* Speed streaks: diagonal lines that drift across the hero, suggesting charging motion */
+    .speed-streaks {
+      position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+    }
+    .speed-streaks::before, .speed-streaks::after {
+      content: ""; position: absolute; top: -20%; left: -50%; width: 200%; height: 140%;
+      background-image: repeating-linear-gradient(
+        110deg,
+        transparent 0,
+        transparent 24px,
+        rgba(243,112,33,0.08) 24px,
+        rgba(243,112,33,0.08) 26px,
+        transparent 26px,
+        transparent 80px
+      );
+      animation: streakDrift 18s linear infinite;
+    }
+    .speed-streaks::after {
+      opacity: 0.5;
+      animation-duration: 26s;
+      background-image: repeating-linear-gradient(
+        110deg,
+        transparent 0,
+        transparent 60px,
+        rgba(15,15,18,0.04) 60px,
+        rgba(15,15,18,0.04) 62px,
+        transparent 62px,
+        transparent 180px
+      );
+    }
+    @keyframes streakDrift {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-180px); }
+    }
+
+    /* Charging rhino watermark — sits behind everything, drifts very slowly */
+    .rhino-watermark {
+      position: absolute; right: -60px; bottom: -40px; width: 520px; max-width: 60%;
+      opacity: 0.05; color: #F37021; pointer-events: none; z-index: 0;
+      animation: rhinoPulse 6s ease-in-out infinite;
+    }
+    @keyframes rhinoPulse {
+      0%, 100% { transform: translateX(0) scale(1); opacity: 0.06; }
+      50%      { transform: translateX(8px) scale(1.02); opacity: 0.09; }
+    }
+
+    /* Mockup fade-up on page load */
+    .mockup-rise {
+      animation: riseIn 1100ms cubic-bezier(0.2, 0.85, 0.3, 1) 250ms both;
+    }
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero copy stagger */
+    .hero-eyebrow { animation: fadeUp 600ms ease-out 100ms both; }
+    .hero-h1      { animation: fadeUp 700ms ease-out 200ms both; }
+    .hero-sub     { animation: fadeUp 700ms ease-out 350ms both; }
+    .hero-ctas    { animation: fadeUp 700ms ease-out 500ms both; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Pulsing active dot in admin mockup */
+    .pulse-dot {
+      animation: pulseDot 2.2s ease-in-out infinite;
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.55; transform: scale(1.15); }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 700ms ease-out, transform 700ms ease-out;
+    }
+    .reveal.in {
+      opacity: 1; transform: translateY(0);
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .speed-streaks::before, .speed-streaks::after,
+      .rhino-watermark, .mockup-rise, .hero-eyebrow, .hero-h1, .hero-sub, .hero-ctas, .pulse-dot, .reveal {
+        animation: none !important; transition: none !important;
+        opacity: 1 !important; transform: none !important;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Rhinos Sponsor Portal Demo",
+    "description": "A custom sponsor portal built for the El Paso Rhinos by AgentDeploy TX.",
+    "url": "https://rhinos-sponsor-portal.netlify.app/"
+  }
+  </script>
+</head>
+
+<body class="bg-rhino-cream text-rhino-ink antialiased">
+
+<a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white px-4 py-2 rounded">Skip to content</a>
+
+<!-- HEADER -->
+<header class="bg-rhino-ink text-white">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <svg viewBox="0 0 40 40" class="w-9 h-9" aria-hidden="true">
+        <path fill="#F37021" d="M6 28c0-7 6-12 13-12 3 0 5 1 6 2l3-3h7l-3 6c1 2 1 4 1 6 0 4-3 7-7 7H10c-2 0-4-1-4-3z"/>
+        <circle fill="#0F0F12" cx="28" cy="22" r="1.5"/>
+        <path fill="#F37021" d="M22 12l-2-5 3 1 1-2 2 3 3-1-1 3 3 2-4 1z"/>
+      </svg>
+      <div>
+        <div class="display text-xl leading-none tracking-wide">RHINOS</div>
+        <div class="text-[10px] uppercase tracking-[0.2em] text-rhino-silver/70">Sponsor Portal</div>
+      </div>
+    </div>
+    <a href="#cta" class="hidden sm:inline-flex items-center px-5 py-2.5 rounded-md bg-rhino-orange text-white font-semibold text-sm hover:bg-rhino-orangeDark transition">
+      Walk Through It →
+    </a>
+  </div>
+  <div class="h-[3px] bg-gradient-to-r from-rhino-orange via-rhino-orange to-transparent"></div>
+</header>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="relative bg-rhino-cream overflow-hidden">
+  <div class="hero-accent"></div>
+  <div class="speed-streaks" aria-hidden="true"></div>
+
+  <!-- Charging rhino watermark (stylized silhouette) -->
+  <svg class="rhino-watermark" viewBox="0 0 600 240" aria-hidden="true">
+    <g fill="currentColor">
+      <!-- body -->
+      <path d="M40 165 C55 140, 110 130, 170 132 L260 130 C310 128, 360 132, 400 142 L440 152 C460 156, 478 162, 488 172 L498 182 C504 188, 502 198, 494 202 L478 208 L468 210 L458 213 L460 232 L455 238 L444 238 L443 222 L425 215 L380 215 L370 232 L362 238 L352 238 L352 224 L338 218 L210 218 L200 232 L190 238 L180 238 L180 224 L168 218 L110 218 L100 232 L90 238 L80 238 L80 224 L72 218 L58 200 L45 184 Z"/>
+      <!-- big horn forward -->
+      <path d="M488 152 L530 130 L548 122 L538 148 L520 160 Z"/>
+      <!-- small horn -->
+      <path d="M465 158 L478 142 L490 150 L482 162 Z"/>
+      <!-- ear -->
+      <path d="M448 132 L440 115 L460 115 L460 132 Z"/>
+      <!-- motion streaks behind -->
+      <rect x="0" y="160" width="40" height="6" rx="3"/>
+      <rect x="0" y="180" width="60" height="5" rx="2"/>
+      <rect x="0" y="200" width="30" height="5" rx="2"/>
+    </g>
+  </svg>
+
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-28 grid lg:grid-cols-12 gap-12 items-center" style="z-index:1;">
+
+    <div class="lg:col-span-6">
+      <div class="hero-eyebrow inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-semibold text-rhino-orange mb-6">
+        <span class="w-8 h-px bg-rhino-orange"></span>
+        <span>Built for the El Paso Rhinos</span>
+      </div>
+
+      <h1 class="hero-h1 display text-5xl md:text-6xl lg:text-7xl leading-[0.95] text-rhino-ink mb-6">
+        A sponsor portal<br>
+        <span class="text-rhino-orange">built for the Rhinos.</span><br>
+        No more two-hour<br>Word proposals.
+      </h1>
+
+      <p class="hero-sub text-lg md:text-xl text-rhino-steel max-w-xl mb-8 leading-relaxed">
+        Branded sponsor logins. AI-generated proposals and activation reports. A live dashboard of every partner — built around <em>your</em> pipeline, not a generic SaaS.
+      </p>
+
+      <div class="hero-ctas flex flex-col sm:flex-row gap-3">
+        <a href="#pain" class="inline-flex items-center justify-center px-7 py-4 rounded-md bg-rhino-orange text-white font-semibold hover:bg-rhino-orangeDark transition">
+          See it in 60 seconds ↓
+        </a>
+        <a href="#rollout" class="inline-flex items-center justify-center px-7 py-4 rounded-md border-2 border-rhino-ink text-rhino-ink font-semibold hover:bg-rhino-ink hover:text-white transition">
+          The 30-day plan
+        </a>
+      </div>
+
+      <p class="mt-8 text-sm text-rhino-steel">
+        Custom-built by <span class="font-semibold text-rhino-ink">AgentDeploy TX</span> — your operational bandwidth team.
+      </p>
+    </div>
+
+    <div class="lg:col-span-6 mockup-rise">
+      <div class="mockup-shadow rounded-xl overflow-hidden bg-white">
+        <div class="browser-chrome">
+          <div class="browser-dot bg-red-500/80"></div>
+          <div class="browser-dot bg-yellow-500/80"></div>
+          <div class="browser-dot bg-green-500/80"></div>
+          <div class="ml-3 flex-1 bg-rhino-ink2 text-rhino-silver/80 text-xs rounded px-3 py-1 font-mono truncate">
+            rhinos-portal.app/admin
+          </div>
+        </div>
+        <div class="bg-rhino-ink text-white p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <div class="text-[11px] uppercase tracking-widest text-rhino-silver/60">Welcome back</div>
+              <div class="display text-2xl">SHEA HERMAN</div>
+            </div>
+            <div class="text-xs px-3 py-1 rounded-full bg-rhino-orange/20 text-rhino-orange font-semibold flex items-center gap-1.5">
+              <span class="pulse-dot inline-block w-1.5 h-1.5 rounded-full bg-rhino-orange"></span>
+              <span>41 ACTIVE PARTNERS</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 mb-4">
+            <div class="bg-rhino-ink2 rounded-lg p-3">
+              <div class="text-[10px] uppercase tracking-wider text-rhino-silver/60">YTD Revenue</div>
+              <div class="display text-xl text-white mt-1">$284K</div>
+              <div class="text-[10px] text-green-400">↑ 18% vs LY</div>
+            </div>
+            <div class="bg-rhino-ink2 rounded-lg p-3">
+              <div class="text-[10px] uppercase tracking-wider text-rhino-silver/60">Renewals due</div>
+              <div class="display text-xl text-rhino-orange mt-1">7</div>
+              <div class="text-[10px] text-rhino-silver/60">next 30 days</div>
+            </div>
+            <div class="bg-rhino-ink2 rounded-lg p-3">
+              <div class="text-[10px] uppercase tracking-wider text-rhino-silver/60">Activations</div>
+              <div class="display text-xl text-white mt-1">96%</div>
+              <div class="text-[10px] text-green-400">on schedule</div>
+            </div>
+          </div>
+
+          <div class="bg-rhino-ink2 rounded-lg p-3">
+            <div class="text-[10px] uppercase tracking-wider text-rhino-silver/60 mb-2">Sponsor Pipeline</div>
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-white">Sunflower Bank</span>
+                <span class="px-2 py-0.5 rounded bg-green-500/20 text-green-400 font-semibold">ACTIVE</span>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-white">Hunt Companies</span>
+                <span class="px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-semibold">RENEWAL DUE</span>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-white">L&amp;F Distributors</span>
+                <span class="px-2 py-0.5 rounded bg-rhino-orange/20 text-rhino-orange font-semibold">PROPOSAL OUT</span>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-white">El Paso Electric</span>
+                <span class="px-2 py-0.5 rounded bg-green-500/20 text-green-400 font-semibold">ACTIVE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-center text-xs text-rhino-steel mt-3">↑ Sample dashboard — actual data populated from your sponsor list</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- THE PAIN, NAMED -->
+<section id="pain" class="bg-rhino-ink text-white py-20 lg:py-28">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="max-w-3xl mb-14 reveal">
+      <div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-semibold text-rhino-orange mb-4">
+        <span class="w-8 h-px bg-rhino-orange"></span><span>The shift</span>
+      </div>
+      <h2 class="display text-4xl md:text-5xl lg:text-6xl leading-tight mb-4">
+        Today, this eats your week.<br>
+        <span class="text-rhino-orange">Tomorrow, it runs itself.</span>
+      </h2>
+      <p class="text-lg text-rhino-silver/70 max-w-2xl">Three things that take hours every week — and the version of them that gets handed back to you, ready to send.</p>
+    </div>
+
+    <div class="space-y-4">
+      <div class="grid md:grid-cols-12 gap-4 bg-rhino-ink2 rounded-2xl p-6 md:p-8">
+        <div class="md:col-span-3"><div class="display text-2xl text-rhino-orange">PROPOSALS</div></div>
+        <div class="md:col-span-4">
+          <div class="text-xs uppercase tracking-widest text-rhino-silver/50 mb-2">Today</div>
+          <p class="text-rhino-silver/90">You open Word. Copy last year's deck. Hand-edit logos, packages, pricing. <span class="text-white font-semibold">30 min to 2+ hours per proposal.</span></p>
+        </div>
+        <div class="md:col-span-5">
+          <div class="text-xs uppercase tracking-widest text-rhino-orange mb-2">Tomorrow</div>
+          <p class="text-white">You answer 4 questions about the prospect. The system writes the proposal in your voice, drops in the right package tier, and produces a branded PDF + a shareable link. <span class="font-semibold text-rhino-orange">90 seconds.</span></p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-12 gap-4 bg-rhino-ink2 rounded-2xl p-6 md:p-8">
+        <div class="md:col-span-3"><div class="display text-2xl text-rhino-orange">ACTIVATIONS</div></div>
+        <div class="md:col-span-4">
+          <div class="text-xs uppercase tracking-widest text-rhino-silver/50 mb-2">Today</div>
+          <p class="text-rhino-silver/90">You track deliverables in your head, on sticky notes, or in a spreadsheet. Sponsors ask "what did we get this month?" and you scramble.</p>
+        </div>
+        <div class="md:col-span-5">
+          <div class="text-xs uppercase tracking-widest text-rhino-orange mb-2">Tomorrow</div>
+          <p class="text-white">Every activation — in-arena signage, social posts, theme nights, military appreciation — is tracked automatically. Sponsors see it in real time on their portal. <span class="font-semibold text-rhino-orange">Zero scramble.</span></p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-12 gap-4 bg-rhino-ink2 rounded-2xl p-6 md:p-8">
+        <div class="md:col-span-3"><div class="display text-2xl text-rhino-orange">REPORTING</div></div>
+        <div class="md:col-span-4">
+          <div class="text-xs uppercase tracking-widest text-rhino-silver/50 mb-2">Today</div>
+          <p class="text-rhino-silver/90">End of season. You build every sponsor's activation recap from scratch — a fresh PowerPoint per partner. Days lost.</p>
+        </div>
+        <div class="md:col-span-5">
+          <div class="text-xs uppercase tracking-widest text-rhino-orange mb-2">Tomorrow</div>
+          <p class="text-white">One click. Branded recap deck for every sponsor — their assets, their reach, their impact, their renewal ask — generated automatically. <span class="font-semibold text-rhino-orange">Hours back to your real work.</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TABBED MOCKUP -->
+<section class="py-20 lg:py-28 bg-rhino-cream">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+    <div class="max-w-3xl mb-12 reveal">
+      <div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-semibold text-rhino-orange mb-4">
+        <span class="w-8 h-px bg-rhino-orange"></span><span>Two views, one system</span>
+      </div>
+      <h2 class="display text-4xl md:text-5xl lg:text-6xl text-rhino-ink leading-tight mb-4">
+        What you see.<br>
+        <span class="text-rhino-orange">What your sponsors see.</span>
+      </h2>
+    </div>
+
+    <div class="inline-flex p-1.5 bg-white rounded-full border border-rhino-silver mb-8 shadow-sm">
+      <button id="tab-sponsor" class="tab-btn px-5 py-2.5 rounded-full text-sm font-semibold transition" aria-selected="true">What sponsors see</button>
+      <button id="tab-admin" class="tab-btn px-5 py-2.5 rounded-full text-sm font-semibold transition" aria-selected="false">What you see</button>
+    </div>
+
+    <!-- Panel: Sponsor view -->
+    <div id="panel-sponsor" class="block">
+      <div class="grid lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-5 lg:sticky lg:top-8">
+          <h3 class="display text-3xl text-rhino-ink mb-4">A branded hub for every partner.</h3>
+          <p class="text-rhino-steel mb-6">Their package. Their assets. Their performance. Always one link away. They feel taken care of, you stop answering "what did we get?" emails.</p>
+          <ul class="space-y-3 text-sm">
+            <li class="flex gap-3"><span class="text-rhino-orange font-bold">✓</span><span><strong>Branded as Rhinos × [Sponsor]</strong> — every login feels exclusive.</span></li>
+            <li class="flex gap-3"><span class="text-rhino-orange font-bold">✓</span><span>Live activation tracker — they see deliverables happen in real time.</span></li>
+            <li class="flex gap-3"><span class="text-rhino-orange font-bold">✓</span><span>Asset library — logos, photos, recap PDFs — all in one place.</span></li>
+            <li class="flex gap-3"><span class="text-rhino-orange font-bold">✓</span><span>Renewal CTA when the season closes — frictionless re-signs.</span></li>
+          </ul>
+        </div>
+
+        <div class="lg:col-span-7">
+          <div class="mockup-shadow rounded-xl overflow-hidden bg-white">
+            <div class="browser-chrome">
+              <div class="browser-dot bg-red-500/80"></div>
+              <div class="browser-dot bg-yellow-500/80"></div>
+              <div class="browser-dot bg-green-500/80"></div>
+              <div class="ml-3 flex-1 bg-rhino-ink2 text-rhino-silver/80 text-xs rounded px-3 py-1 font-mono truncate">sunflower.rhinos-portal.app</div>
+            </div>
+            <div class="bg-white">
+              <div class="bg-rhino-ink text-white px-5 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded bg-rhino-orange flex items-center justify-center display text-sm">R</div>
+                  <div class="text-xs text-rhino-silver/70 leading-tight">RHINOS<br><span class="text-white">× Sunflower Bank</span></div>
+                </div>
+                <div class="text-xs text-rhino-silver/70">Gold Tier · Season 19</div>
+              </div>
+
+              <div class="p-5 space-y-4">
+                <div>
+                  <div class="text-[10px] uppercase tracking-widest text-rhino-steel mb-1">YOUR PACKAGE</div>
+                  <div class="display text-xl text-rhino-ink">Center Ice Sponsor + In-Game Activation</div>
+                </div>
+
+                <div class="border border-rhino-silver rounded-lg p-4">
+                  <div class="text-[10px] uppercase tracking-widest text-rhino-steel mb-3">ACTIVATIONS THIS MONTH</div>
+                  <div class="space-y-2">
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500"></span>In-arena LED rotation (12 games)</span>
+                      <span class="text-green-600 font-semibold text-xs">DELIVERED</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500"></span>Social spotlight — @el_paso_rhinos</span>
+                      <span class="text-green-600 font-semibold text-xs">DELIVERED</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-yellow-500"></span>Military Appreciation Night ticket drop</span>
+                      <span class="text-yellow-600 font-semibold text-xs">SCHEDULED 5/24</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rhino-silver"></span>Mid-season recap delivery</span>
+                      <span class="text-rhino-steel font-semibold text-xs">UPCOMING</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2">
+                  <div class="bg-rhino-cream rounded-lg p-3">
+                    <div class="text-[9px] uppercase tracking-wider text-rhino-steel">Impressions</div>
+                    <div class="display text-lg text-rhino-ink">412K</div>
+                  </div>
+                  <div class="bg-rhino-cream rounded-lg p-3">
+                    <div class="text-[9px] uppercase tracking-wider text-rhino-steel">Social reach</div>
+                    <div class="display text-lg text-rhino-ink">88K</div>
+                  </div>
+                  <div class="bg-rhino-cream rounded-lg p-3">
+                    <div class="text-[9px] uppercase tracking-wider text-rhino-steel">Live attendance</div>
+                    <div class="display text-lg text-rhino-ink">19,400</div>
+                  </div>
+                </div>
+
+                <button class="w-full bg-rhino-orange text-white font-semibold py-3 rounded-lg text-sm hover:bg-rhino-orangeDark transition">Download Mid-Season Recap PDF</button>
+              </div>
+            </div>
+          </div>
+          <p class="text-center text-xs text-rhino-steel mt-3">↑ Example: Sunflower Bank's branded Rhinos portal</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: Admin view -->
+    <div id="panel-admin" class="hidden">
+      <div class="grid lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-5 lg:sticky lg:top-8">
+          <h3 class="display text-3xl text-rhino-ink mb-4">One screen. Every sponsor.</h3>
+          <p class="text-rhino-steel mb-6">You wake up, open one tab, and see exactly where every partner is. No spreadsheets. No "I think we owe them a recap." Click → generate → send.</p>
+          <ul class="space-y-3 text-sm">
+            <li class="flex gap-3"><span class="text-rhino-orange font-bold">✓</span><span>Sponsor pipeline at a glance — Active, Renewal Due, Proposal Out.</span></li>
+            <li class="flex gap-3"><span class="text-rhino-orange font-bold">✓</span><span>Click any sponsor → generate proposal, recap, or invoice instantly.</span></li>
+            <li class="flex gap-3"><span class="text-rhino-orange font-bold">✓</span><span>Automated reminders — renewals, mid-season check-ins, deliverable due-dates.</span></li>
+            <li class="flex gap-3"><span class="text-rhino-orange font-bold">✓</span><span>Revenue dashboard — YTD, YoY, by tier. Board-ready in one screenshot.</span></li>
+          </ul>
+        </div>
+
+        <div class="lg:col-span-7">
+          <div class="mockup-shadow rounded-xl overflow-hidden bg-white">
+            <div class="browser-chrome">
+              <div class="browser-dot bg-red-500/80"></div>
+              <div class="browser-dot bg-yellow-500/80"></div>
+              <div class="browser-dot bg-green-500/80"></div>
+              <div class="ml-3 flex-1 bg-rhino-ink2 text-rhino-silver/80 text-xs rounded px-3 py-1 font-mono truncate">rhinos-portal.app/admin/sponsors</div>
+            </div>
+            <div class="bg-rhino-ink text-white">
+              <div class="px-5 py-3 border-b border-white/10 flex items-center justify-between">
+                <div class="flex items-center gap-2 text-sm">
+                  <span class="text-rhino-silver/60">Admin /</span>
+                  <span class="font-semibold">Sponsors</span>
+                </div>
+                <button class="text-xs px-3 py-1.5 rounded bg-rhino-orange font-semibold">+ New Sponsor</button>
+              </div>
+              <div class="p-5">
+                <div class="grid grid-cols-4 gap-2 mb-4 text-[10px] uppercase tracking-widest text-rhino-silver/60">
+                  <div>Partner</div>
+                  <div>Tier</div>
+                  <div>Status</div>
+                  <div class="text-right">Quick action</div>
+                </div>
+                <div class="space-y-2 text-sm">
+                  <div class="grid grid-cols-4 gap-2 items-center bg-rhino-ink2 rounded-lg px-3 py-2.5">
+                    <div class="font-semibold">Sunflower Bank</div>
+                    <div class="text-rhino-silver/70">Gold</div>
+                    <div><span class="px-2 py-0.5 rounded bg-green-500/20 text-green-400 text-xs font-semibold">ACTIVE</span></div>
+                    <div class="text-right"><button class="text-xs text-rhino-orange font-semibold">Generate Recap →</button></div>
+                  </div>
+                  <div class="grid grid-cols-4 gap-2 items-center bg-rhino-ink2 rounded-lg px-3 py-2.5">
+                    <div class="font-semibold">Hunt Companies</div>
+                    <div class="text-rhino-silver/70">Platinum</div>
+                    <div><span class="px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-400 text-xs font-semibold">RENEWAL DUE</span></div>
+                    <div class="text-right"><button class="text-xs text-rhino-orange font-semibold">Draft Renewal →</button></div>
+                  </div>
+                  <div class="grid grid-cols-4 gap-2 items-center bg-rhino-ink2 rounded-lg px-3 py-2.5">
+                    <div class="font-semibold">L&amp;F Distributors</div>
+                    <div class="text-rhino-silver/70">Silver</div>
+                    <div><span class="px-2 py-0.5 rounded bg-rhino-orange/20 text-rhino-orange text-xs font-semibold">PROPOSAL OUT</span></div>
+                    <div class="text-right"><button class="text-xs text-rhino-orange font-semibold">Follow Up →</button></div>
+                  </div>
+                  <div class="grid grid-cols-4 gap-2 items-center bg-rhino-ink2 rounded-lg px-3 py-2.5">
+                    <div class="font-semibold">El Paso Electric</div>
+                    <div class="text-rhino-silver/70">Gold</div>
+                    <div><span class="px-2 py-0.5 rounded bg-green-500/20 text-green-400 text-xs font-semibold">ACTIVE</span></div>
+                    <div class="text-right"><button class="text-xs text-rhino-orange font-semibold">View Portal →</button></div>
+                  </div>
+                  <div class="grid grid-cols-4 gap-2 items-center bg-rhino-ink2 rounded-lg px-3 py-2.5">
+                    <div class="font-semibold">Marcus Family Fdn.</div>
+                    <div class="text-rhino-silver/70">Charity</div>
+                    <div><span class="px-2 py-0.5 rounded bg-green-500/20 text-green-400 text-xs font-semibold">ACTIVE</span></div>
+                    <div class="text-right"><button class="text-xs text-rhino-orange font-semibold">Generate Recap →</button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="text-center text-xs text-rhino-steel mt-3">↑ Example: Shea's admin view — sponsor names are placeholders</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI ENGINE — 3 documents -->
+<section class="py-20 lg:py-28 bg-white stripe-orange">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="max-w-3xl mb-14 reveal">
+      <div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-semibold text-rhino-orange mb-4">
+        <span class="w-8 h-px bg-rhino-orange"></span><span>The engine behind it</span>
+      </div>
+      <h2 class="display text-4xl md:text-5xl lg:text-6xl text-rhino-ink leading-tight mb-4">
+        Three documents,<br>
+        <span class="text-rhino-orange">written automatically.</span>
+      </h2>
+      <p class="text-lg text-rhino-steel max-w-2xl">The pieces that take you hours each week — and what gets handed back to you, branded and ready to send, in seconds.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="doc-preview">
+        <div class="doc-header-stripe"></div>
+        <div class="p-5">
+          <div class="text-[10px] uppercase tracking-widest text-rhino-steel mb-2">DOCUMENT 1</div>
+          <div class="display text-2xl text-rhino-ink mb-3">Branded Proposal</div>
+          <div class="bg-rhino-cream rounded p-3 space-y-2 mb-4">
+            <div class="h-2 bg-rhino-orange/70 rounded w-3/4"></div>
+            <div class="h-1.5 bg-rhino-silver rounded w-full"></div>
+            <div class="h-1.5 bg-rhino-silver rounded w-5/6"></div>
+            <div class="h-1.5 bg-rhino-silver rounded w-2/3"></div>
+            <div class="h-8 bg-rhino-orange/20 rounded mt-3"></div>
+            <div class="h-1.5 bg-rhino-silver rounded w-1/2"></div>
+          </div>
+          <p class="text-sm text-rhino-steel"><strong class="text-rhino-ink">Answer 4 questions, get a proposal.</strong> Prospect's industry, tier ask, season ask, custom activation. The system writes the rest in your voice and brands it in Rhinos orange and black.</p>
+          <div class="mt-4 text-xs text-rhino-orange font-semibold">⚡ 2 hours → 90 seconds</div>
+        </div>
+      </div>
+
+      <div class="doc-preview">
+        <div class="doc-header-stripe"></div>
+        <div class="p-5">
+          <div class="text-[10px] uppercase tracking-widest text-rhino-steel mb-2">DOCUMENT 2</div>
+          <div class="display text-2xl text-rhino-ink mb-3">Mid-Season Recap</div>
+          <div class="bg-rhino-cream rounded p-3 space-y-2 mb-4">
+            <div class="h-2 bg-rhino-orange/70 rounded w-2/3"></div>
+            <div class="flex gap-1.5">
+              <div class="h-10 w-full bg-white border border-rhino-silver rounded"></div>
+              <div class="h-10 w-full bg-white border border-rhino-silver rounded"></div>
+              <div class="h-10 w-full bg-white border border-rhino-silver rounded"></div>
+            </div>
+            <div class="h-1.5 bg-rhino-silver rounded w-full"></div>
+            <div class="h-1.5 bg-rhino-silver rounded w-4/5"></div>
+            <div class="h-6 bg-rhino-orange/30 rounded mt-2"></div>
+          </div>
+          <p class="text-sm text-rhino-steel"><strong class="text-rhino-ink">Per-sponsor recap, on demand.</strong> Pulls their activations, impressions, social reach, attendance. Auto-formatted to their tier. Click → download → send.</p>
+          <div class="mt-4 text-xs text-rhino-orange font-semibold">⚡ A whole day → one click</div>
+        </div>
+      </div>
+
+      <div class="doc-preview">
+        <div class="doc-header-stripe"></div>
+        <div class="p-5">
+          <div class="text-[10px] uppercase tracking-widest text-rhino-steel mb-2">DOCUMENT 3</div>
+          <div class="display text-2xl text-rhino-ink mb-3">Season Recap Deck</div>
+          <div class="bg-rhino-cream rounded p-3 space-y-2 mb-4">
+            <div class="grid grid-cols-3 gap-1">
+              <div class="h-10 bg-rhino-ink rounded"></div>
+              <div class="h-10 bg-rhino-orange/70 rounded"></div>
+              <div class="h-10 bg-rhino-silver rounded"></div>
+            </div>
+            <div class="h-1.5 bg-rhino-silver rounded w-full"></div>
+            <div class="h-1.5 bg-rhino-silver rounded w-2/3"></div>
+            <div class="grid grid-cols-2 gap-1 mt-2">
+              <div class="h-8 bg-white border border-rhino-silver rounded"></div>
+              <div class="h-8 bg-white border border-rhino-silver rounded"></div>
+            </div>
+          </div>
+          <p class="text-sm text-rhino-steel"><strong class="text-rhino-ink">Renewal-ready, every time.</strong> Full season story per sponsor, ending in a clear renewal ask at the right tier. They don't think about leaving.</p>
+          <div class="mt-4 text-xs text-rhino-orange font-semibold">⚡ A week → one Monday</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 30-DAY ROLLOUT -->
+<section id="rollout" class="py-20 lg:py-28 bg-rhino-ink text-white">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="max-w-3xl mb-14 reveal">
+      <div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-semibold text-rhino-orange mb-4">
+        <span class="w-8 h-px bg-rhino-orange"></span><span>The plan</span>
+      </div>
+      <h2 class="display text-4xl md:text-5xl lg:text-6xl leading-tight mb-4">
+        Here's the 30 days<br>
+        <span class="text-rhino-orange">that get us live.</span>
+      </h2>
+      <p class="text-lg text-rhino-silver/70 max-w-2xl">Scoped, weekly, no scope-creep. By day 30 you're using it for real, with your real sponsor list loaded.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-rhino-ink2 rounded-2xl p-6 border-t-2 border-rhino-orange">
+        <div class="display text-4xl text-rhino-orange mb-2">01</div>
+        <div class="text-xs uppercase tracking-widest text-rhino-silver/60 mb-2">Week 1</div>
+        <h3 class="display text-xl mb-3">Foundation</h3>
+        <ul class="text-sm text-rhino-silver/90 space-y-2">
+          <li>→ Brand kit + portal styling</li>
+          <li>→ Admin login + sponsor table</li>
+          <li>→ Tier and package structure imported</li>
+        </ul>
+      </div>
+      <div class="bg-rhino-ink2 rounded-2xl p-6 border-t-2 border-rhino-orange">
+        <div class="display text-4xl text-rhino-orange mb-2">02</div>
+        <div class="text-xs uppercase tracking-widest text-rhino-silver/60 mb-2">Week 2</div>
+        <h3 class="display text-xl mb-3">Sponsors loaded</h3>
+        <ul class="text-sm text-rhino-silver/90 space-y-2">
+          <li>→ Your top 10 partners imported</li>
+          <li>→ Branded sponsor portals live</li>
+          <li>→ Activation tracker wired up</li>
+        </ul>
+      </div>
+      <div class="bg-rhino-ink2 rounded-2xl p-6 border-t-2 border-rhino-orange">
+        <div class="display text-4xl text-rhino-orange mb-2">03</div>
+        <div class="text-xs uppercase tracking-widest text-rhino-silver/60 mb-2">Week 3</div>
+        <h3 class="display text-xl mb-3">Proposal engine</h3>
+        <ul class="text-sm text-rhino-silver/90 space-y-2">
+          <li>→ AI proposal generator tuned to your voice</li>
+          <li>→ Branded PDF + shareable-link output</li>
+          <li>→ First real proposal sent through it</li>
+        </ul>
+      </div>
+      <div class="bg-rhino-ink2 rounded-2xl p-6 border-t-2 border-rhino-orange">
+        <div class="display text-4xl text-rhino-orange mb-2">04</div>
+        <div class="text-xs uppercase tracking-widest text-rhino-silver/60 mb-2">Week 4</div>
+        <h3 class="display text-xl mb-3">Reporting + handoff</h3>
+        <ul class="text-sm text-rhino-silver/90 space-y-2">
+          <li>→ Activation report auto-generator live</li>
+          <li>→ Season recap template approved</li>
+          <li>→ Training session — you're driving it</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 p-6 lg:p-8 bg-rhino-orange rounded-2xl flex flex-col md:flex-row items-start md:items-center gap-6">
+      <div class="flex-1">
+        <div class="display text-2xl mb-1">After 30 days, you have your time back.</div>
+        <p class="text-white/90">Sponsorship pipeline runs in one screen. Proposals in seconds. Recaps on demand. You go from doing the work to running the program.</p>
+      </div>
+      <a href="#cta" class="inline-flex items-center px-6 py-3 rounded-md bg-rhino-ink text-white font-semibold hover:bg-black transition whitespace-nowrap">Let's walk through it →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="cta" class="py-20 lg:py-28 bg-rhino-cream">
+  <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center reveal">
+    <div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-semibold text-rhino-orange mb-4 mx-auto">
+      <span class="w-8 h-px bg-rhino-orange"></span>
+      <span>Monday, 10:30am</span>
+      <span class="w-8 h-px bg-rhino-orange"></span>
+    </div>
+    <h2 class="display text-4xl md:text-6xl lg:text-7xl text-rhino-ink leading-[0.95] mb-6">
+      Let's walk through<br>
+      <span class="text-rhino-orange">your version.</span>
+    </h2>
+    <p class="text-lg text-rhino-steel mb-10 max-w-xl mx-auto">
+      The meeting's booked. Bring your sponsor list and your hardest questions — I'll show you exactly how it runs.
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+      <a href="mailto:diego.gallardo.dg@gmail.com?subject=Rhinos%20Sponsor%20Portal" class="inline-flex items-center justify-center px-7 py-4 rounded-md bg-rhino-orange text-white font-semibold hover:bg-rhino-orangeDark transition">Email Diego</a>
+      <a href="#rollout" class="inline-flex items-center justify-center px-7 py-4 rounded-md border-2 border-rhino-ink text-rhino-ink font-semibold hover:bg-rhino-ink hover:text-white transition">Review the plan</a>
+    </div>
+
+    <p class="text-sm text-rhino-steel">601 Woodland Ave, El Paso · Monday May 18 · 10:30 AM</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="bg-rhino-ink text-rhino-silver/70 py-10">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row justify-between gap-6 text-sm">
+    <div>
+      <div class="display text-xl text-white mb-1">AGENTDEPLOY TX</div>
+      <p>Operational bandwidth for ambitious operators.</p>
+      <p class="mt-2">Built for the El Paso Rhinos — May 2026.</p>
+    </div>
+    <div class="text-right md:text-right">
+      <p>Diego Gallardo · Founder</p>
+      <p><a href="mailto:diego.gallardo.dg@gmail.com" class="hover:text-rhino-orange">diego.gallardo.dg@gmail.com</a></p>
+      <p>El Paso, TX</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Tab toggle
+  const tabSponsor = document.getElementById('tab-sponsor');
+  const tabAdmin = document.getElementById('tab-admin');
+  const panelSponsor = document.getElementById('panel-sponsor');
+  const panelAdmin = document.getElementById('panel-admin');
+
+  function activate(which) {
+    const sponsorOn = which === 'sponsor';
+    tabSponsor.setAttribute('aria-selected', sponsorOn ? 'true' : 'false');
+    tabAdmin.setAttribute('aria-selected', sponsorOn ? 'false' : 'true');
+    panelSponsor.classList.toggle('hidden', !sponsorOn);
+    panelSponsor.classList.toggle('block', sponsorOn);
+    panelAdmin.classList.toggle('hidden', sponsorOn);
+    panelAdmin.classList.toggle('block', !sponsorOn);
+  }
+  tabSponsor.addEventListener('click', () => activate('sponsor'));
+  tabAdmin.addEventListener('click', () => activate('admin'));
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+  reveals.forEach(r => io.observe(r));
+</script>
+
+</body>
+</html>
