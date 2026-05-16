@@ -1,0 +1,13 @@
+# Force-404 internal paths so the strategic brief, design plan, brand assets,
+# README, and deploy script can never be fetched publicly.
+# The trailing `!` makes the rule force-apply even if a real file exists.
+/_research/*    /404 404!
+/_design/*      /404 404!
+/_brand/*       /404 404!
+/README.md      /404 404!
+/README         /404 404!
+/deploy.sh      /404 404!
+/.netlifyignore /404 404!
+
+# SPA-style catchall — must remain LAST.
+/*  /index.html  200
