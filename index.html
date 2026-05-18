@@ -35,7 +35,7 @@
               ink:       '#0B0B0E',   /* team black */
               ink2:      '#17171A',   /* card surface */
               silver:    '#D4D4D8',   /* team grey light */
-              steel:     '#52525B',   /* team grey mid */
+              steel:     '#52525B',   /* te am grey mid */
               cream:     '#FAFAF9'    /* off-white */
             }
           }
@@ -78,7 +78,6 @@
     .doc-header-stripe { height: 6px; background: #F37021; }
 
     /* === HERO ANIMATION === */
-    /* Speed streaks: diagonal lines that drift across the hero, suggesting charging motion */
     .speed-streaks {
       position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
     }
@@ -113,7 +112,6 @@
       to   { transform: translateX(-180px); }
     }
 
-    /* Charging rhino watermark — sits behind everything, drifts very slowly */
     .rhino-watermark {
       position: absolute; right: -60px; bottom: -40px; width: 520px; max-width: 60%;
       opacity: 0.05; color: #F37021; pointer-events: none; z-index: 0;
@@ -124,7 +122,6 @@
       50%      { transform: translateX(8px) scale(1.02); opacity: 0.09; }
     }
 
-    /* Mockup fade-up on page load */
     .mockup-rise {
       animation: riseIn 1100ms cubic-bezier(0.2, 0.85, 0.3, 1) 250ms both;
     }
@@ -133,7 +130,6 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Hero copy stagger */
     .hero-eyebrow { animation: fadeUp 600ms ease-out 100ms both; }
     .hero-h1      { animation: fadeUp 700ms ease-out 200ms both; }
     .hero-sub     { animation: fadeUp 700ms ease-out 350ms both; }
@@ -143,7 +139,6 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Pulsing active dot in admin mockup */
     .pulse-dot {
       animation: pulseDot 2.2s ease-in-out infinite;
     }
@@ -152,7 +147,6 @@
       50%      { opacity: 0.55; transform: scale(1.15); }
     }
 
-    /* Scroll reveal */
     .reveal {
       opacity: 0; transform: translateY(20px);
       transition: opacity 700ms ease-out, transform 700ms ease-out;
@@ -161,7 +155,6 @@
       opacity: 1; transform: translateY(0);
     }
 
-    /* Respect reduced motion */
     @media (prefers-reduced-motion: reduce) {
       .speed-streaks::before, .speed-streaks::after,
       .rhino-watermark, .mockup-rise, .hero-eyebrow, .hero-h1, .hero-sub, .hero-ctas, .pulse-dot, .reveal {
@@ -214,18 +207,12 @@
   <div class="hero-accent"></div>
   <div class="speed-streaks" aria-hidden="true"></div>
 
-  <!-- Charging rhino watermark (stylized silhouette) -->
   <svg class="rhino-watermark" viewBox="0 0 600 240" aria-hidden="true">
     <g fill="currentColor">
-      <!-- body -->
       <path d="M40 165 C55 140, 110 130, 170 132 L260 130 C310 128, 360 132, 400 142 L440 152 C460 156, 478 162, 488 172 L498 182 C504 188, 502 198, 494 202 L478 208 L468 210 L458 213 L460 232 L455 238 L444 238 L443 222 L425 215 L380 215 L370 232 L362 238 L352 238 L352 224 L338 218 L210 218 L200 232 L190 238 L180 238 L180 224 L168 218 L110 218 L100 232 L90 238 L80 238 L80 224 L72 218 L58 200 L45 184 Z"/>
-      <!-- big horn forward -->
       <path d="M488 152 L530 130 L548 122 L538 148 L520 160 Z"/>
-      <!-- small horn -->
       <path d="M465 158 L478 142 L490 150 L482 162 Z"/>
-      <!-- ear -->
       <path d="M448 132 L440 115 L460 115 L460 132 Z"/>
-      <!-- motion streaks behind -->
       <rect x="0" y="160" width="40" height="6" rx="3"/>
       <rect x="0" y="180" width="60" height="5" rx="2"/>
       <rect x="0" y="200" width="30" height="5" rx="2"/>
@@ -648,6 +635,108 @@
   </div>
 </section>
 
+<!-- DONATIONS & PAYMENTS -->
+<section id="donate" class="py-20 lg:py-28 bg-white">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="grid lg:grid-cols-12 gap-10 items-start">
+
+      <div class="lg:col-span-5 reveal">
+        <div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-semibold text-rhino-orange mb-4">
+          <span class="w-8 h-px bg-rhino-orange"></span><span>The money layer</span>
+        </div>
+        <h2 class="display text-4xl md:text-5xl lg:text-6xl text-rhino-ink leading-tight mb-4">
+          Sponsors pay,<br>
+          <span class="text-rhino-orange">supporters donate.</span>
+        </h2>
+        <p class="text-lg text-rhino-steel mb-8">
+          Every page in this portal can collect money. Sponsorship invoices paid in one tap. Foundation donations with auto-emailed tax receipts. Youth camp registrations + waivers, signed and paid on the same screen.
+        </p>
+        <ul class="space-y-3 text-sm">
+          <li class="flex gap-3"><span class="text-rhino-orange font-bold">✓</span><span><strong>Stripe + Apple Pay</strong> — sponsors and donors pay in seconds. Funds settle next business day.</span></li>
+          <li class="flex gap-3"><span class="text-rhino-orange font-bold">✓</span><span><strong>Auto tax receipts</strong> — 501(c)(3) compliant, emailed instantly.</span></li>
+          <li class="flex gap-3"><span class="text-rhino-orange font-bold">✓</span><span><strong>No more chasing checks</strong> — invoice ships with a "Pay now" link, status posts to the dashboard.</span></li>
+          <li class="flex gap-3"><span class="text-rhino-orange font-bold">✓</span><span><strong>One reporting line</strong> — sponsorship, donations, camp fees all roll into the same revenue board.</span></li>
+        </ul>
+      </div>
+
+      <div class="lg:col-span-7">
+        <div class="mockup-shadow rounded-xl overflow-hidden bg-white border border-rhino-silver">
+          <div class="browser-chrome">
+            <div class="browser-dot bg-red-500/80"></div>
+            <div class="browser-dot bg-yellow-500/80"></div>
+            <div class="browser-dot bg-green-500/80"></div>
+            <div class="ml-3 flex-1 bg-rhino-ink2 text-rhino-silver/80 text-xs rounded px-3 py-1 font-mono truncate">rhinos-portal.app/donate</div>
+          </div>
+          <div class="bg-rhino-ink text-white p-8 text-center">
+            <div class="text-[10px] uppercase tracking-widest text-rhino-orange mb-2">Support the Rhinos Foundation</div>
+            <h3 class="display text-3xl mb-2">Help send a kid to camp.</h3>
+            <p class="text-sm text-rhino-silver/80 max-w-md mx-auto mb-6">100% of every dollar funds equipment, ice time, and scholarships for El Paso youth hockey.</p>
+
+            <div class="grid grid-cols-4 gap-3 mb-5 max-w-md mx-auto">
+              <button class="donate-tier rounded-lg py-3 text-sm font-semibold border border-white/10 transition" data-amount="25">$25</button>
+              <button class="donate-tier rounded-lg py-3 text-sm font-semibold border border-white/10 transition" data-amount="50">$50</button>
+              <button class="donate-tier rounded-lg py-3 text-sm font-semibold border border-white/10 transition" data-amount="100">$100</button>
+              <button class="donate-tier rounded-lg py-3 text-sm font-semibold border border-white/10 transition" data-amount="custom">Other</button>
+            </div>
+
+            <button id="donate-cta" class="w-full max-w-md mx-auto bg-rhino-orange hover:bg-rhino-orangeDark transition rounded-lg py-3.5 text-sm font-semibold flex items-center justify-center gap-2">
+              <span id="cta-label">Donate $100</span>
+              <span class="text-white/80">→</span>
+            </button>
+
+            <p class="text-[10px] text-rhino-silver/50 mt-4">Tax-deductible · 501(c)(3) · El Paso Rhinos Foundation</p>
+          </div>
+        </div>
+        <p class="text-center text-xs text-rhino-steel mt-3">↑ Live demo. Tap any tier, then "Donate" — see the real Stripe checkout (test mode).</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DONATE MODAL -->
+<div id="donate-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm px-4" role="dialog" aria-modal="true">
+  <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl">
+    <div class="bg-rhino-ink text-white px-6 py-4 flex items-center justify-between">
+      <div>
+        <div class="text-[10px] uppercase tracking-widest text-rhino-orange">Rhinos Foundation</div>
+        <div class="display text-xl">Donate <span id="modal-amount">$100</span></div>
+      </div>
+      <button id="modal-close" class="text-white/70 hover:text-white text-3xl leading-none -mt-1" aria-label="Close">&times;</button>
+    </div>
+
+    <div id="modal-form" class="p-6">
+      <div class="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-4 text-xs text-amber-900 leading-snug">
+        <strong>Test mode demo.</strong> Use card <span class="font-mono bg-white px-1 rounded border border-amber-200">4242 4242 4242 4242</span>, any future date, any CVC. In production this charges your card.
+      </div>
+
+      <label class="block text-xs font-semibold text-rhino-steel uppercase tracking-wider mb-2">Card details</label>
+      <div id="card-element" class="border border-rhino-silver rounded-lg px-3 py-3 mb-1"></div>
+      <div id="card-errors" class="text-xs text-red-600 min-h-[18px] mb-3" role="alert"></div>
+
+      <label class="block text-xs font-semibold text-rhino-steel uppercase tracking-wider mb-2">Email for tax receipt</label>
+      <input type="email" id="donate-email" placeholder="you@example.com" class="w-full border border-rhino-silver rounded-lg px-3 py-2.5 mb-4 text-sm focus:outline-none focus:border-rhino-orange focus:ring-1 focus:ring-rhino-orange">
+
+      <button id="donate-submit" class="w-full bg-rhino-orange hover:bg-rhino-orangeDark transition rounded-lg py-3 text-white font-semibold text-sm disabled:opacity-60 disabled:cursor-not-allowed">
+        Donate <span id="submit-amount">$100</span>
+      </button>
+      <p class="text-[10px] text-rhino-steel text-center mt-3">Secured by Stripe · Tax-deductible · 501(c)(3)</p>
+    </div>
+
+    <div id="modal-success" class="p-8 text-center hidden">
+      <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <h3 class="display text-2xl text-rhino-ink mb-2">Thank you.</h3>
+      <p class="text-sm text-rhino-steel mb-5">A receipt for <span id="success-amount" class="font-semibold text-rhino-ink">$100</span> has been sent to <span id="success-email" class="font-mono text-rhino-ink"></span></p>
+      <div class="bg-rhino-cream rounded-lg px-4 py-3 text-xs text-rhino-steel leading-snug">
+        <strong>Test mode:</strong> No actual charge. In production, funds settle to the foundation account the next business day.
+      </div>
+      <button id="success-close" class="mt-6 text-sm text-rhino-orange font-semibold hover:underline">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- 30-DAY ROLLOUT -->
 <section id="rollout" class="py-20 lg:py-28 bg-rhino-ink text-white">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
@@ -787,6 +876,155 @@
     });
   }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
   reveals.forEach(r => io.observe(r));
+</script>
+
+<!-- ===== Stripe Donate Flow ===== -->
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  (function() {
+    const STRIPE_PK = 'pk_test_TYooMQauvdEDq54NiTphI7jx';
+
+    const tierButtons = document.querySelectorAll('.donate-tier');
+    const ctaButton  = document.getElementById('donate-cta');
+    const ctaLabel   = document.getElementById('cta-label');
+    const modal      = document.getElementById('donate-modal');
+    const modalForm  = document.getElementById('modal-form');
+    const modalSuccess = document.getElementById('modal-success');
+    const modalAmount = document.getElementById('modal-amount');
+    const submitAmount = document.getElementById('submit-amount');
+    const successAmount = document.getElementById('success-amount');
+    const successEmail = document.getElementById('success-email');
+    const errorBox = document.getElementById('card-errors');
+
+    let selectedTier = 100;
+    let resolvedAmount = 100;
+
+    function paintTiers() {
+      tierButtons.forEach(btn => {
+        const active = String(btn.dataset.amount) === String(selectedTier);
+        btn.classList.toggle('bg-rhino-orange', active);
+        btn.classList.toggle('bg-rhino-ink2', !active);
+        btn.classList.toggle('hover:bg-rhino-orange', !active);
+      });
+      ctaLabel.textContent = selectedTier === 'custom' ? 'Donate other amount' : 'Donate $' + selectedTier;
+    }
+
+    tierButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const v = btn.dataset.amount;
+        selectedTier = (v === 'custom') ? 'custom' : Number(v);
+        paintTiers();
+      });
+    });
+    paintTiers();
+
+    const stripe = window.Stripe ? Stripe(STRIPE_PK) : null;
+    let elements = null;
+    let card = null;
+    let cardMounted = false;
+
+    function ensureStripe() {
+      if (!stripe) return false;
+      if (!elements) {
+        elements = stripe.elements();
+        card = elements.create('card', {
+          hidePostalCode: false,
+          style: {
+            base: {
+              fontSize: '15px',
+              color: '#0B0B0E',
+              fontFamily: 'Inter, system-ui, sans-serif',
+              '::placeholder': { color: '#9CA3AF' }
+            },
+            invalid: { color: '#DC2626' }
+          }
+        });
+        card.on('change', e => { errorBox.textContent = e.error ? e.error.message : ''; });
+      }
+      if (!cardMounted) {
+        card.mount('#card-element');
+        cardMounted = true;
+      }
+      return true;
+    }
+
+    function openModal() {
+      let amount = selectedTier;
+      if (amount === 'custom') {
+        const raw = window.prompt('How much would you like to donate? (USD)', '50');
+        if (!raw) return;
+        const n = Number(String(raw).replace(/[^0-9.]/g, ''));
+        if (!n || n < 1) { alert('Please enter a dollar amount of $1 or more.'); return; }
+        amount = Math.round(n);
+      }
+      resolvedAmount = amount;
+
+      modalAmount.textContent = '$' + amount;
+      submitAmount.textContent = '$' + amount;
+      successAmount.textContent = '$' + amount;
+      errorBox.textContent = '';
+      document.getElementById('donate-email').value = '';
+
+      modalForm.classList.remove('hidden');
+      modalSuccess.classList.add('hidden');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+
+      ensureStripe();
+    }
+
+    function closeModal() {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    ctaButton.addEventListener('click', openModal);
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    document.getElementById('success-close').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal(); });
+
+    document.getElementById('donate-submit').addEventListener('click', async () => {
+      const email = document.getElementById('donate-email').value.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errorBox.textContent = 'Please enter a valid email so we can send your receipt.';
+        return;
+      }
+
+      const submitBtn = document.getElementById('donate-submit');
+      const originalLabel = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = 'Processing…';
+
+      try {
+        if (!ensureStripe()) {
+          throw new Error('Payment system unavailable.');
+        }
+        const { paymentMethod, error } = await stripe.createPaymentMethod({
+          type: 'card',
+          card: card,
+          billing_details: { email: email }
+        });
+
+        if (error) {
+          errorBox.textContent = error.message;
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalLabel;
+          return;
+        }
+
+        successEmail.textContent = email;
+        modalForm.classList.add('hidden');
+        modalSuccess.classList.remove('hidden');
+      } catch (err) {
+        errorBox.textContent = err.message || 'Something went wrong. Please try again.';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalLabel;
+      }
+    });
+  })();
 </script>
 
 </body>
