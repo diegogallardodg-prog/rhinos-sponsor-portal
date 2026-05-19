@@ -35,7 +35,7 @@
               ink:       '#0B0B0E',   /* team black */
               ink2:      '#17171A',   /* card surface */
               silver:    '#D4D4D8',   /* team grey light */
-              steel:     '#52525B',   /* te am grey mid */
+              steel:     '#52525B',   /* team grey mid */
               cream:     '#FAFAF9'    /* off-white */
             }
           }
@@ -78,6 +78,7 @@
     .doc-header-stripe { height: 6px; background: #F37021; }
 
     /* === HERO ANIMATION === */
+    /* Speed streaks: diagonal lines that drift across the hero, suggesting charging motion */
     .speed-streaks {
       position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
     }
@@ -112,6 +113,7 @@
       to   { transform: translateX(-180px); }
     }
 
+    /* Charging rhino watermark — sits behind everything, drifts very slowly */
     .rhino-watermark {
       position: absolute; right: -60px; bottom: -40px; width: 520px; max-width: 60%;
       opacity: 0.05; color: #F37021; pointer-events: none; z-index: 0;
@@ -122,6 +124,7 @@
       50%      { transform: translateX(8px) scale(1.02); opacity: 0.09; }
     }
 
+    /* Mockup fade-up on page load */
     .mockup-rise {
       animation: riseIn 1100ms cubic-bezier(0.2, 0.85, 0.3, 1) 250ms both;
     }
@@ -130,6 +133,7 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* Hero copy stagger */
     .hero-eyebrow { animation: fadeUp 600ms ease-out 100ms both; }
     .hero-h1      { animation: fadeUp 700ms ease-out 200ms both; }
     .hero-sub     { animation: fadeUp 700ms ease-out 350ms both; }
@@ -139,6 +143,7 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* Pulsing active dot in admin mockup */
     .pulse-dot {
       animation: pulseDot 2.2s ease-in-out infinite;
     }
@@ -147,6 +152,7 @@
       50%      { opacity: 0.55; transform: scale(1.15); }
     }
 
+    /* Scroll reveal */
     .reveal {
       opacity: 0; transform: translateY(20px);
       transition: opacity 700ms ease-out, transform 700ms ease-out;
@@ -155,6 +161,7 @@
       opacity: 1; transform: translateY(0);
     }
 
+    /* Respect reduced motion */
     @media (prefers-reduced-motion: reduce) {
       .speed-streaks::before, .speed-streaks::after,
       .rhino-watermark, .mockup-rise, .hero-eyebrow, .hero-h1, .hero-sub, .hero-ctas, .pulse-dot, .reveal {
@@ -207,12 +214,18 @@
   <div class="hero-accent"></div>
   <div class="speed-streaks" aria-hidden="true"></div>
 
+  <!-- Charging rhino watermark (stylized silhouette) -->
   <svg class="rhino-watermark" viewBox="0 0 600 240" aria-hidden="true">
     <g fill="currentColor">
+      <!-- body -->
       <path d="M40 165 C55 140, 110 130, 170 132 L260 130 C310 128, 360 132, 400 142 L440 152 C460 156, 478 162, 488 172 L498 182 C504 188, 502 198, 494 202 L478 208 L468 210 L458 213 L460 232 L455 238 L444 238 L443 222 L425 215 L380 215 L370 232 L362 238 L352 238 L352 224 L338 218 L210 218 L200 232 L190 238 L180 238 L180 224 L168 218 L110 218 L100 232 L90 238 L80 238 L80 224 L72 218 L58 200 L45 184 Z"/>
+      <!-- big horn forward -->
       <path d="M488 152 L530 130 L548 122 L538 148 L520 160 Z"/>
+      <!-- small horn -->
       <path d="M465 158 L478 142 L490 150 L482 162 Z"/>
+      <!-- ear -->
       <path d="M448 132 L440 115 L460 115 L460 132 Z"/>
+      <!-- motion streaks behind -->
       <rect x="0" y="160" width="40" height="6" rx="3"/>
       <rect x="0" y="180" width="60" height="5" rx="2"/>
       <rect x="0" y="200" width="30" height="5" rx="2"/>
@@ -265,7 +278,7 @@
           <div class="flex items-center justify-between mb-4">
             <div>
               <div class="text-[11px] uppercase tracking-widest text-rhino-silver/60">Welcome back</div>
-              <div class="display text-2xl">SHEA SHERMAN</div>
+              <div class="display text-2xl">SHEA HERMAN</div>
             </div>
             <div class="text-xs px-3 py-1 rounded-full bg-rhino-orange/20 text-rhino-orange font-semibold flex items-center gap-1.5">
               <span class="pulse-dot inline-block w-1.5 h-1.5 rounded-full bg-rhino-orange"></span>
@@ -882,6 +895,8 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script>
   (function() {
+    // Stripe test publishable key — public, safe to commit. Diego swaps for the
+    // Rhinos Foundation's live key when she signs.
     const STRIPE_PK = 'pk_test_TYooMQauvdEDq54NiTphI7jx';
 
     const tierButtons = document.querySelectorAll('.donate-tier');
@@ -896,8 +911,8 @@
     const successEmail = document.getElementById('success-email');
     const errorBox = document.getElementById('card-errors');
 
-    let selectedTier = 100;
-    let resolvedAmount = 100;
+    let selectedTier = 100;        // can be number or 'custom'
+    let resolvedAmount = 100;      // numeric amount used at submit time
 
     function paintTiers() {
       tierButtons.forEach(btn => {
@@ -918,6 +933,7 @@
     });
     paintTiers();
 
+    // Stripe Elements (mounted lazily the first time modal opens)
     const stripe = window.Stripe ? Stripe(STRIPE_PK) : null;
     let elements = null;
     let card = null;
@@ -1015,6 +1031,9 @@
           return;
         }
 
+        // In production: POST { paymentMethodId, amount, email } to /api/donate
+        // which creates a Stripe PaymentIntent server-side. For this demo we show
+        // the success state — the card was validated by Stripe Elements.
         successEmail.textContent = email;
         modalForm.classList.add('hidden');
         modalSuccess.classList.remove('hidden');
